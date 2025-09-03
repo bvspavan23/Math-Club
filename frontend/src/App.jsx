@@ -1,28 +1,46 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Nav/Navbar';
-import Home from './components/Home/Home';
-import People from './components/Team/People';
-// import PublicEvents from './components/Events/publiceve';
-import Login from './components/Login/signin';
-import { useSelector } from 'react-redux';
-import PrivateNav from './components/Nav/PrivateNav';
-import PublicEve from './components/Events/PublicEve.jsx';
-import EventAdder from './components/Events/AddEvent';
+import { useSelector } from "react-redux";
+import { useEffect } from 'react';
+import { useDispatch } from "react-redux";
+import './index.css';
+import Navbar from './components/Nav/Navbar.jsx';
+import Head from './components/Head/Head.jsx';
+import People from './components/Team/People.jsx';
+import Signin from './components/Login/signin.jsx'
+import PrivateNav from './components/Nav/PrivateNav.jsx';
+import EventAdder from './components/eves/AddEvent.jsx';
+import PublicEve from './components/eves/PublicEve.jsx';
 import AuthRoute from './components/Auth/AuthRoute.jsx';
-import EventInfo from './components/Events/EventInfo.jsx';
-import EveList from './components/Events/EveList.jsx';
-function App() {
-  const user=useSelector((state)=>state.auth.user);
-  return (
-    <Router>
+import EveList from './components/eves/EveList.jsx';
+import EventInfo from './components/eves/EventInfo.jsx';
+import EventUpdater from './components/eves/UpdateEve.jsx';
+import { eventlistApi } from './redux/slice/eventSlice.js';
+import Register from './components/eves/Register.jsx';
+import About from './components/About/About.jsx';
+import Regdetails from './components/Studentregs/Regdetails.jsx';
+function App(){
+  
+  const dispatch = useDispatch();
+  const user=useSelector((state)=>state?.auth?.user);
+
+  useEffect(() => {
+    dispatch(eventlistApi());
+  }, [dispatch]);
+
+  return(
+    <Router> 
+      
       {user ? <PrivateNav/> : <Navbar/>}
+
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/Team" element={<People />} />
-        <Route path="/Events" element={<PublicEve/>} />  
-        <Route path="/Admin" element={<Login/>} />  
+        <Route path="/" element={<Head />}/>
+        <Route path="/team" element={<People/>}/>
+        <Route path="/about" element={<About/>}/>
+        <Route path="/admin" element={<Signin/>}/> 
+        <Route path="/events" element={<PublicEve/>}/> 
         <Route path="/event/eventinfo/:eventname/:eventid" element={<EventInfo/>}/>
+        <Route path="/event/register/:eventname/:eventid" element={<Register/>}/>
         <Route 
           path="/edit/add/eve" 
           element={
@@ -30,7 +48,7 @@ function App() {
               <EventAdder />
             </AuthRoute>
           } 
-        /> 
+        />
         <Route 
           path="/edit/botpapi/list/events" 
           element={
@@ -38,10 +56,25 @@ function App() {
               <EveList/>
             </AuthRoute>
           } 
-        />     
+        /> 
+        <Route 
+          path="/event/eventinfo/update/:eventname/:eventid" 
+          element={
+            <AuthRoute>
+              <EventUpdater/>
+            </AuthRoute>
+          } 
+        /> 
+        <Route 
+          path="/event/admin/studentregs/:eventid" 
+          element={
+            <AuthRoute>
+              <Regdetails/>
+            </AuthRoute>
+          } 
+        /> 
       </Routes>
     </Router>
-  );
+  )
 }
-
 export default App;

@@ -1,45 +1,76 @@
-import React from "react";
-import "./Navbar.css";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { IoMdClose } from "react-icons/io";
-import { useState } from "react";
-import { Link,useLocation} from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
-const Navbar=()=>{
-    const [open,setOpen]=useState(false);
-    const location=useLocation();
+import "../Nav/Navbar.css";
 
-    const isHome=location.pathname==="/"
-    function toggle(){
-        setOpen(!open);
+const Navbar = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
-    }
-    return(
-        <div className={`nav ${isHome?"home-nav":"def-nav"}`}>
-        <div className="logo">
-            <div className="club">
-                <img src={Logo} alt="" />
-                <h3>Math Club</h3>
-            </div>
-            {/* <img src={Logo} alt="" />
-            <h3>Math Club</h3> */}
-            <div className="menu">
-                {open?<IoMdClose onClick={toggle}/>:<GiHamburgerMenu onClick={toggle}/>}
-        </div>
-        </div>
-        <div className={`items ${isHome?"home-items":"def-items"} ${open? "open":""} `}>
-            <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/About">About</Link></li>
-                <li><Link to="/Team">Team</Link> </li>
-                <li><Link to="/Events">Events</Link> </li>
-                <li><Link to="/Admin">Login</Link> </li>  
-            </ul>
-        </div>
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
+  };
 
-    </div>
-    )
+  const closeNav = () => {
+    setIsNavOpen(false);
+  };
 
-}
+  return (
+    <nav className="p-5 bg-white shadow md:flex md:items-center md:justify-between z-50">
+      <div className="flex justify-between items-center">
+        <span className="anonymous-pro-bold text-2xl cursor-pointer pavan-papi">
+          <img className="h-10 inline logo-wrapper" src={Logo} alt="LOGO"></img>
+          <span>C</span>
+          <span>O</span>
+          <span>D</span>
+          <span>I</span>
+          <span>N</span>
+          <span>G</span>
+          <span> </span>
+          <span>C</span>
+          <span>L</span>
+          <span>U</span>
+          <span>B</span>
+        </span>
+        <span
+          className="text-3xl cursor-pointer mx-2 md:hidden block"
+          onClick={toggleNav}
+        >
+          <ion-icon name="menu"></ion-icon>
+        </span>
+      </div>
+      <ul
+        className={`md:flex md:items-center z-[1] md:z-[1] md:static absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 transition-all ease-in duration-500 ${
+          isNavOpen ? "opacity-100 top-[80px]" : "opacity-0 top-[-400px]"
+        }`}
+      >
+        <li className="mx-4 my-6 md:my-0 bot cursor-pointer" onClick={closeNav}>
+          <Link to="/" className="block w-full h-full">
+            Home
+          </Link>
+        </li>
+        <li className="mx-4 my-6 md:my-0 bot cursor-pointer" onClick={closeNav}>
+          <Link to="/about" className="block w-full h-full">
+            About Us
+          </Link>
+        </li>
+        <li className="mx-4 my-6 md:my-0 bot cursor-pointer" onClick={closeNav}>
+          <Link to="/events" className="block w-full h-full">
+            Events
+          </Link>
+        </li>
+        <li className="mx-4 my-6 md:my-0 bot cursor-pointer" onClick={closeNav}>
+          <Link to="/team" className="block w-full h-full">
+            Team
+          </Link>
+        </li>
+        <li className="mx-4 my-6 md:my-0 bot cursor-pointer" onClick={closeNav}>
+          <Link to="/admin" className="block w-full h-full">
+            Login
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  );
+};
 
 export default Navbar;
